@@ -15,8 +15,10 @@ alert(navigator.storage);
       return response.arrayBuffer();
     })
     .then(buffer => {
-      if(!buffer)
+      if(!buffer){
+        document.getElementById("message").innerHTML = "no cache";
         return;
+      }
       document.getElementById("message").innerHTML = buffer.byteLength + "bytes";
     });
   }
