@@ -44,6 +44,17 @@
       showMessage("done");
     });
   }
+  
+  function deleteCache(){
+    var index = getIndex();
+    caches.open("storage_test")
+    .then(cache => {
+      return cache.delete(index);
+    })
+    .then(_ => {
+      showMessage("done");
+    });
+  }
 </script>
 <body>
   Index: <select id="index" name="simple">
@@ -67,7 +78,8 @@
   </select>
   <br/>
   <input type="button" value="キャッシュサイズ表示" onclick="showCacheSize();"/> 
-  <input type="button" value="キャッシュ生成" onclick="putCache();"/>
+  <input type="button" value="キャッシュ生成" onclick="putCache();"/> 
+  <input type="button" value="キャッシュ削除" onclick="deleteCache();"/>
   <br/>
   <div id="message"></div>
 </body>
