@@ -2,9 +2,23 @@
 <script type="text/javascript">
 alert("a");
 alert(navigator.storage);
-alert(navigator.storage.estimate());
-navigator.storage.estimate().then(function(n){alert(n.quota);});
-console.log("aa");
+  
+  function showCacheSize() {
+    var index = document.getElementById("index").value;
+    caches.open("storage_test")
+    .then(cache => {
+      return cache.match(index);
+    })
+    .then(response => {
+      if(!response)
+        return;
+      return response.arrayBuffer();
+    })
+    .then(buffer => {
+      document.getElementById("message").innerHTML = buffer.byteLength + "bytes";
+      
+    });
+  }
 </script>
 <body>
   Index: <select id="index" name="simple">
@@ -26,6 +40,10 @@ console.log("aa");
     <option value=1000000>1MB</option>
     <option value=10000000>10MB</option>
   </select>
-test
+  <br/>
+  <input type="button" value="キャッシュサイズ表示" onclick="showCacheSize();"/> 
+  <input type="button" value="キャッシュ生成"/>
+  <br/>
+  <div id="message"></div>
 </body>
 </html>
