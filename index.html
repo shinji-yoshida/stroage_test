@@ -1,7 +1,5 @@
 <html>
 <script type="text/javascript">
-alert("a");
-alert(navigator.storage);
   function getIndex(){
     return document.getElementById("index").value;
   }
@@ -40,7 +38,7 @@ alert(navigator.storage);
     var length = getByteSize();
     caches.open("storage_test")
     .then(cache => {
-      return cache.put(1, new Response(new Int8Array(length)));
+      return cache.put(index, new Response(new Int8Array(length)));
     })
     .then(_ => {
       showMessage("done");
