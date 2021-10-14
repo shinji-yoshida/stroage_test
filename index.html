@@ -2,12 +2,20 @@
 <script type="text/javascript">
 alert("a");
 alert(navigator.storage);
+  function getIndex(){
+    return document.getElementById("index").value;
+  }
+  
+  function showMessage(message){
+    document.getElementById("message").innerHTML = message;
+  }
   
   function showCacheSize() {
-    var index = document.getElementById("index").value;
+    showMessage("reading...");
+    var index = getIndex();
     caches.open("storage_test")
     .then(cache => {
-      return cache.match(index);
+      return cache.match(getIndex());
     })
     .then(response => {
       if(!response)
@@ -16,10 +24,26 @@ alert(navigator.storage);
     })
     .then(buffer => {
       if(!buffer){
-        document.getElementById("message").innerHTML = "no cache";
+        showMessage("no cache");
         return;
       }
-      document.getElementById("message").innerHTML = buffer.byteLength + "bytes";
+      showMessage(buffer.byteLength + "bytes");
+    });
+  }
+  
+  function getByteSize(){
+    return document.getElementById("size").value;
+  }
+  
+  function putCache() {
+    var index = getIndex();
+    var length = getByteSize();
+    caches.open("storage_test")
+    .then(cache => {
+      return cache.put(1, new Response(new Int8Array(length)));
+    })
+    .then(_ => {
+      showMessage("done");
     });
   }
 </script>
