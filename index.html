@@ -15,8 +15,9 @@ alert(navigator.storage);
       return response.arrayBuffer();
     })
     .then(buffer => {
+      if(!buffer)
+        return;
       document.getElementById("message").innerHTML = buffer.byteLength + "bytes";
-      
     });
   }
 </script>
