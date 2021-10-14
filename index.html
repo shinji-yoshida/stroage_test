@@ -9,7 +9,7 @@
   }
   
   function showCacheSize() {
-    showMessage("reading...");
+    showMessage("読込中...");
     var index = getIndex();
     caches.open("storage_test")
     .then(cache => {
@@ -34,6 +34,7 @@
   }
   
   function putCache() {
+    showMessage("キャッシュ生成中...");
     var index = getIndex();
     var length = getByteSize();
     caches.open("storage_test")
