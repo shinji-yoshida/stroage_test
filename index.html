@@ -52,7 +52,7 @@
     var url = getMovieUrl();
     openCache()
       .then(cache => {
-        return cache.add(url);
+        return cache.add(new Request(url, {"mode": "no-cors"}));
       })
       .then(_ => {
         showMessage("done");
