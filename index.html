@@ -52,7 +52,7 @@
     var url = getMovieUrl();
     openCache()
       .then(cache => {
-        return cache.add(new Request(url, {"mode": "no-cors"}));
+        return cache.add(url);
       })
       .then(_ => {
         showMessage("done");
@@ -74,14 +74,6 @@
       });
       videoElement.src = URL.createObjectURL(blob);
     });
-    
-    openCache()
-      .then(cache => {
-        return cache.add(url);
-      })
-      .then(_ => {
-        showMessage("done");
-      });
   }
   
   function deleteCache(){
