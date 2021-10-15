@@ -11,12 +11,12 @@
   function getBlobForCurrentIndex(){
     return openCache()
       .then(cache => {
-        return cache.keys();
-      })
-      .then(keys => {
-        if(keys.length == 0)
-          return;
-        return cache.match(keys[0]);
+        return cache.keys()
+          .then(keys => {
+            if(keys.length == 0)
+              return;
+            return cache.match(keys[0]);
+          })
       })
       .then(response => {
         if(!response)
