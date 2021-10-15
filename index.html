@@ -48,7 +48,7 @@
   }
   
   function putCache() {
-    showMessage("index " + index + " にキャッシュ生成中...");
+    showMessage("index " + getIndex() + " にキャッシュ生成中...");
     var url = getMovieUrl();
     openCache()
       .then(cache => {
@@ -60,7 +60,7 @@
   }
   
   function playCache() {
-    showMessage("index " + index + " を再生");
+    showMessage("index " + getIndex() + " を再生");
     
     getBlobForCurrentIndex()
     .then(blob => {
@@ -100,7 +100,8 @@
   </select>
   <br/>
   <select id="size" name="simple">
-    <option value="https://storage.googleapis.com/rent-yoshida/dev_public/medium_items_media_3128_original.mp4">1GB</option>
+    <option value="https://storage.googleapis.com/rent-yoshida/dev_public/medium_items_media_3128_original.mp4">1GB 動画</option>
+    <option value="https://storage.googleapis.com/rent-yoshida/dev_public/medium_items_media_243680_original.mp4">320MB 動画</option>
   </select>
   <br/>
   <input type="button" value="キャッシュサイズ表示" onclick="showCacheSize();"/> 
