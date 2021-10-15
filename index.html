@@ -8,53 +8,89 @@
     document.getElementById("message").innerHTML = message;
   }
   
+  function getBlobForCurrentIndex(){
+    return openCache()
+      .then(cache => {
+        return cache.keys();
+      })
+      .then(keys => {
+        if(keys.length == 0)
+          return;
+        return cache.match(keys[0]);
+      })
+      .then(response => {
+        if(!response)
+          return;
+        return response.blob();
+      });
+  }
+  
   function showCacheSize() {
     showMessage("読込中...");
     var index = getIndex();
-    caches.open("storage_test")
-    .then(cache => {
-      return cache.match(getIndex());
-    })
-    .then(response => {
-      if(!response)
-        return;
-      return response.arrayBuffer();
-    })
-    .then(buffer => {
-      if(!buffer){
+    
+    getBlobForCurrentIndex()
+    .then(blob => {
+      if(!blob){
         showMessage("no cache");
         return;
       }
-      showMessage(buffer.byteLength.toLocaleString() + "bytes");
+      showMessage(blob.size.toLocaleString() + "bytes");
     });
   }
   
-  function getByteSize(){
+  function getMovieUrl(){
     return document.getElementById("size").value;
   }
   
+  function openCache() {
+    return caches.open(getIndex());
+  }
+  
   function putCache() {
-    showMessage("キャッシュ生成中...");
-    var index = getIndex();
-    var length = getByteSize();
-    caches.open("storage_test")
-    .then(cache => {
-      return cache.put(index, new Response(new Int8Array(length)));
-    })
-    .then(_ => {
-      showMessage("done");
+    showMessage("index " + index + " にキャッシュ生成中...");
+    var url = getMovieUrl();
+    openCache()
+      .then(cache => {
+        return cache.add(url);
+      })
+      .then(_ => {
+        showMessage("done");
+      });
+  }
+  
+  function playCache() {
+    showMessage("index " + index + " を再生");
+    
+    getBlobForCurrentIndex()
+    .then(blob => {
+      if(!blob){
+        showMessage("no cache");
+        return;
+      }
+      var videoElement = document.getElementById('video');
+      videoElement.addEventListener('loadedmetadata', () => {
+        videoElement.play();
+      });
+      videoElement.src = URL.createObjectURL(blob);
     });
+    
+    openCache()
+      .then(cache => {
+        return cache.add(url);
+      })
+      .then(_ => {
+        showMessage("done");
+      });
   }
   
   function deleteCache(){
+        showMessage("削除中...");
     var index = getIndex();
-    caches.open("storage_test")
-    .then(cache => {
-      return cache.delete(index);
-    })
-    .then(_ => {
-      showMessage("done");
-    });
+    caches.delete(index)
+      .then(_ => {
+        showMessage("index " + index + " を削除しました");
+      });
   }
 </script>
 <body>
@@ -72,16 +108,19 @@
   </select>
   <br/>
   <select id="size" name="simple">
-    <option value=1000000000>1GB</option>
-    <option value=10000000000>10GB</option>
-    <option value=1000000>1MB</option>
-    <option value=10000000>10MB</option>
+    <option value="https://storage.googleapis.com/rent-yoshida/dev_public/medium_items_media_3128_original.mp4">1GB</option>
   </select>
   <br/>
   <input type="button" value="キャッシュサイズ表示" onclick="showCacheSize();"/> 
-  <input type="button" value="キャッシュ生成" onclick="putCache();"/> 
-  <input type="button" value="キャッシュ削除" onclick="deleteCache();"/>
+  <input type="button" value="動画キャッシュ生成" onclick="putCache();"/> 
+  <input type="button" value="キャッシュから動画を再生" onclick="playCache();"/> 
+  <input type="button" value="動画キャッシュ削除" onclick="deleteCache();"/>
   <br/>
   <div id="message"></div>
+  <br/>
+  <br/>
+  <video id="video">
+    <p>キャッシュした動画を表示します</p>
+  </video>
 </body>
 </html>
